@@ -1,0 +1,25 @@
+variables:
+  REGISTRY: 968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/project/vertiree
+
+stages:
+  - build
+
+build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - export ts=`date +%s`
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --destination "${REGISTRY}:pay-crypto-landing-sui-landingpage-${CI_COMMIT_SHORT_SHA}-$ts"
+      --destination "${REGISTRY}:pay-crypto-landing-sui-landingpage-latest"
+      
+  tags:
+    - build
+    - k8s
+  only:
+    refs:
+      - feat/sui-landingpage
